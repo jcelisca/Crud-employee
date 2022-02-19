@@ -119,4 +119,20 @@ public class EmployeeController {
         return this.role.save(rol);
     }
 
+    @PutMapping("/roles/update/{id}")
+    public Role updateRoleById(@PathVariable("id") long id, @RequestBody Role rol){
+        Optional<Role> roleId = role.findById(id);
+        Role r = roleId.get();
+        r.setName(rol.getName());
+        return this.role.save(r);
+    }
+
+    @PutMapping("/projects/update/{id}")
+    public Project updateProjectById(@PathVariable("id") long id, @RequestBody Project proj){
+        Optional<Project> projId = project.findById(id);
+        Project p = projId.get();
+        p.setName(proj.getName());
+        return this.project.save(p);
+    }
+
 }
