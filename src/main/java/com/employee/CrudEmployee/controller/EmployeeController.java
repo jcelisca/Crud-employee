@@ -1,6 +1,7 @@
 package com.employee.CrudEmployee.controller;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import com.employee.CrudEmployee.model.Employee;
 import com.employee.CrudEmployee.model.Project;
@@ -34,9 +35,17 @@ public class EmployeeController {
         return (ArrayList<Employee>) employee.findAll();
     }
 
-    @PostMapping()
+    @PostMapping("/newemployee")
     public Employee saveEmployee(@RequestBody Employee emp){
-        return this.employee.save(emp);
+        Employee em = new Employee(emp.getFirstName(), emp.getLastName(), emp.getEmployeeid(), emp.getRole());
+        List<Long> ids = new ArrayList<Long>();
+        for(Project p: emp.getProjects()){
+            ids.add(p.getId());
+        }
+        em.setProjects(project.findAllById(ids));
+
+        return this.employee.save(em);
+
     }
 
     @GetMapping("/projects")
