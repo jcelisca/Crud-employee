@@ -2,6 +2,7 @@ package com.employee.CrudEmployee.controller;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import com.employee.CrudEmployee.model.Employee;
 import com.employee.CrudEmployee.model.Project;
@@ -11,8 +12,11 @@ import com.employee.CrudEmployee.repositories.IRoleJpaRepository;
 import com.employee.CrudEmployee.repositories.IEmployeeJpaRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -46,6 +50,32 @@ public class EmployeeController {
 
         return this.employee.save(em);
 
+    }
+
+    @PutMapping("/update/{id}")
+    public Employee updateEmployeeById(@PathVariable("id") long id, @RequestBody Employee emp){
+        Optional<Employee> employeeId = employee.findById(id);
+        Employee e = employeeId.get();
+        e.setEmployeeid(emp.getEmployeeid());
+        e.setFirstName(emp.getFirstName());
+        e.setLastName(emp.getLastName());
+        e.setRole(emp.getRole());
+        List<Long> ids = new ArrayList<Long>();
+        for(Project p: emp.getProjects()){
+            ids.add(p.getId());
+        }
+        e.setProjects(project.findAllById(ids));
+        return this.employee.save(e);
+    }
+
+    @GetMapping(path = "/{id}")
+    public Optional<Employee> getEmployeeById(@PathVariable("id") Long id){
+        return employee.findById(id);
+    }
+
+    @GetMapping(path = "/employee/{firstName}")
+    public ArrayList<Employee> getEmployeeByFirstName(@PathVariable("firstName") String firstName){
+        return (ArrayList<Employee>)employee.findByFirstName(firstName);
     }
 
     @GetMapping("/projects")
