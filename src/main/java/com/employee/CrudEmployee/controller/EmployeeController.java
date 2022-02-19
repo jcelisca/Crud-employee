@@ -78,6 +78,27 @@ public class EmployeeController {
         return (ArrayList<Employee>)employee.findByFirstName(firstName);
     }
 
+    @DeleteMapping("/{id}")
+    public String deleteEmployeeById(@PathVariable("id") Long id){
+        try{
+            employee.deleteById(id);
+            return "Eliminated employee with id: "+ id;
+        }catch(Exception err){
+            return "Can't delete user with id: "+ id;
+        }
+    }
+
+    @DeleteMapping("/delete/{firstName}")
+    public String deleteEmployeeById(@PathVariable("firstName") String firstName){
+        try{
+            List<Employee> emp = employee.findByFirstName(firstName);
+            employee.deleteAll(emp);
+            return "Eliminated employee with name: "+ firstName;
+        }catch(Exception err){
+            return "Can't delete user with name: "+ firstName;
+        }
+    }
+
     @GetMapping("/projects")
     public ArrayList<Project> gProjects(){
         return (ArrayList<Project>) project.findAll();
